@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória - Cores</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #e3f2fd;
+            font-family: Arial, sans-serif;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            gap: 10px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #b0bec5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .card.flipped {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Memória - Cores</h1>
+    <p>Encontre os pares de cores!</p>
+    <div class="game-container" id="gameBoard"></div>
+    <p id="message"></p>
+    <script>
+        const colors = ["🔴", "🟢", "🔵", "🟡", "🔴", "🟢", "🔵", "🟡"];
+        let flippedCards = [];
+
+        function shuffle(array) {
+            return array.sort(() => 0.5 - Math.random());
+        }
+
+        function createBoard() {
+            const board = document.getElementById("gameBoard");
+            board.innerHTML = "";
+            let shuffledColors = shuffle([...colors]);
+            shuffledColors.forEach(color => {
+                let div = document.createElement("div");
+                div.classList.add("card");
+                div.dataset.color = color;
+                div.onclick = () => flipCard(div);
+                board.appendChild(div);
+            });
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains("flipped")) {
+                card.classList.add("flipped");
+                card.innerText = card.dataset.color;
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 500);
+                }
+            }
+        }
+
+        function checkMatch() {
+            if (flippedCards[0].dataset.color === flippedCards[1].dataset.color) {
+                flippedCards = [];
+            } else {
+                flippedCards.forEach(card => {
+                    card.classList.remove("flipped");
+                    card.innerText = "";
+                });
+                flippedCards = [];
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

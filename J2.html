@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras Interativo</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+        }
+        .word-container {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .letter {
+            width: 50px;
+            height: 50px;
+            background-color: #ffcc80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .letter.selected {
+            background-color: #ff7043;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Caça-Palavras</h1>
+    <p>Encontre a palavra escondida!</p>
+    <div class="word-container" id="wordGrid"></div>
+    <p id="message"></p>
+    <script>
+        const word = "SOL";
+        const letters = ["S", "O", "L", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+        let selectedLetters = "";
+
+        function createGrid() {
+            const grid = document.getElementById("wordGrid");
+            letters.forEach(letter => {
+                let div = document.createElement("div");
+                div.classList.add("letter");
+                div.innerText = letter;
+                div.onclick = () => selectLetter(div, letter);
+                grid.appendChild(div);
+            });
+        }
+
+        function selectLetter(div, letter) {
+            if (!div.classList.contains("selected")) {
+                div.classList.add("selected");
+                selectedLetters += letter;
+                checkWord();
+            }
+        }
+
+        function checkWord() {
+            if (selectedLetters.length >= word.length) {
+                if (selectedLetters.includes(word)) {
+                    document.getElementById("message").innerText = "Parabéns! Você encontrou a palavra!";
+                } else {
+                    document.getElementById("message").innerText = "Tente novamente!";
+                    resetSelection();
+                }
+            }
+        }
+
+        function resetSelection() {
+            document.querySelectorAll(".letter").forEach(div => div.classList.remove("selected"));
+            selectedLetters = "";
+        }
+
+        createGrid();
+    </script>
+</body>
+</html>
